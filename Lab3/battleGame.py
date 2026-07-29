@@ -5,7 +5,7 @@ class character:
         self.health=health
         
     def attack(self,enemy):
-        damage = 12
+        damage = 10
         enemy.take_damage(damage)
         return f"{self.name} attacks! {enemy.name} health -{damage} 💥💥"
         
@@ -74,11 +74,17 @@ def battle(p1,p2):
 characters = [
     warrior("Lee", 100, 20),
     wizard("Naruto", 90, "Rasingan"),
-    archer("Coan", 85, 95)
+    archer("Coan", 85, 95),
+    character("norm","90")
 ]
-          
+
+
 battle(characters[0],characters[1])  
 
 for i in characters:
-    print(i.attack(characters[0]))          
+    if i==characters[0]:
+        enemy=characters[1]
+    else :
+        enemy=characters[0]
+    print(i.attack(enemy))           
 
