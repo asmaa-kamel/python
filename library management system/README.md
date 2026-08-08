@@ -16,7 +16,7 @@ The system supports three user roles, each with different borrowing restrictions
 | **View All / Available Books** | ✅ | ✅ | ✅ |
 | **View Own Borrowed Books** | ✅ | ✅ | ✅ |
 | **Add / Remove Books** | ❌ | ❌ | ✅ |
-| **Search Book by ID** | ❌ | ❌ | ✅ |
+| **Search Book by ID** | ✅ | ✅ | ✅ |
 
 ---
 
