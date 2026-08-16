@@ -1,0 +1,123 @@
+{% extends 'courses/base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Filter Courses{% endblock %}
+
+{% block content %}
+<style>
+    .filter-container {
+        max-width: 750px;
+        margin: 40px auto;
+        padding: 0 15px;
+    }
+    .filter-container h2 {
+        color: #1e293b;
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+    .filter-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    .filter-select {
+        flex: 1;
+        padding: 11px 16px;
+        border: 1px solid #cbd5e0;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        background-color: #ffffff;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .filter-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    .btn-filter {
+        background-color: #2c3e50;
+        color: white;
+        border: none;
+        padding: 0 22px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .btn-filter:hover {
+        background-color: #1a252f;
+    }
+
+    .course-card {
+        background: #ffffff;
+        padding: 20px 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 16px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .course-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+    .course-title {
+        margin: 0 0 6px 0;
+        font-size: 18px;
+        font-weight: 700;
+    }
+    .course-title a {
+        color: #1e293b;
+        text-decoration: none;
+    }
+    .course-title a:hover {
+        color: #3b82f6;
+    }
+    .course-instructor {
+        margin: 0;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .empty-msg {
+        text-align: center;
+        color: #64748b;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+<div class="filter-container">
+    <h2>Filter Courses by Instructor</h2>
+
+    <form method="get" action="{% url 'filter_by_instructor' %}" class="filter-box">
+        <select name="category" class="filter-select">
+            <option value="">All Instructors</option>
+            {% for instructor in instructors %}
+                <option value="{{ instructor.id }}" {% if instructor_id == instructor.id|stringformat:"s" %}selected{% endif %}>
+                    {{ instructor.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-filter">Filter</button>
+    </form>
+
+    {% if courses %}
+        {% for course in courses %}
+            <div class="course-card">
+                <h3 class="course-title">
+                    <a href="{% url 'view_course_detail' course.id %}">{{ course.title }}</a>
+                </h3>
+                <p class="course-instructor">Instructor: {{ course.instructor.name }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-msg">
+            <p>No courses found for this instructor.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

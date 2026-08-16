@@ -1,0 +1,219 @@
+{% extends 'courses/base.html' %}
+{% load widget_tweaks %}
+{% block title %}All Courses{% endblock %}
+
+{% block content %}
+<style>
+    .courses-container {
+        max-width: 750px;
+        margin: 40px auto;
+        padding: 0 15px;
+    }
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+    .header-section h2 {
+        color: #1e293b;
+        font-size: 26px;
+        margin: 0;
+        font-weight: 700;
+    }
+    .btn-add {
+        background-color: #2c3e50;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: background 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+    .btn-add:hover {
+        background-color: #1a252f;
+    }
+    .search-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    .search-input {
+        flex: 1;
+        padding: 11px 16px;
+        border: 1px solid #cbd5e0;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background-color: #ffffff;
+    }
+    .search-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    .btn-search {
+        background-color: #2c3e50;
+        color: white;
+        border: none;
+        padding: 0 22px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .btn-search:hover {
+        background-color: #1a252f;
+    }
+    .course-card {
+        background: #ffffff;
+        padding: 20px 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .course-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+    .course-title {
+        margin: 0 0 6px 0;
+        font-size: 18px;
+        font-weight: 700;
+    }
+    .course-title a {
+        color: #1e293b;
+        text-decoration: none;
+    }
+    .course-title a:hover {
+        color: #3b82f6;
+    }
+    .instructor-name {
+        margin: 0;
+        color: #64748b;
+        font-size: 14px;
+    }
+    .course-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+    .btn-action {
+        padding: 7px 14px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .btn-edit {
+        background-color: #f1f5f9;
+        color: #334155;
+    }
+    .btn-edit:hover {
+        background-color: #e2e8f0;
+        color: #0f172a;
+    }
+    .btn-delete {
+        background-color: #fef2f2;
+        color: #dc2626;
+    }
+    .btn-delete:hover {
+        background-color: #fee2e2;
+    }
+    .empty-msg {
+        text-align: center;
+        color: #64748b;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .user-footer {
+        margin-top: 35px;
+        padding-top: 15px;
+        border-top: 1px solid #cbd5e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #475569;
+        font-size: 14px;
+    }
+    .btn-logout {
+        background-color: #ef4444;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: background 0.2s;
+    }
+    .btn-logout:hover {
+        background-color: #dc2626;
+    }
+</style>
+
+<div class="courses-container">
+    <div class="header-section">
+        <h2>All Courses</h2>
+       
+    </div>
+
+    <form method="get" action="{% url 'search_courses' %}" class="search-box">
+        <input type="text" name="q" value="{{ query }}" placeholder="Enter course title..." class="search-input">
+        <button type="submit" class="btn-search">Search</button>
+    </form>
+
+    <form method="get" action="{% url 'filter_by_instructor' %}" class="search-box">
+        <input type="text" name="q" value="{{ query }}" placeholder="Enter instructor name..." class="search-input">
+        <button type="submit" class="btn-search">Search</button>
+    </form>
+
+    {% if courses %}
+        {% for course in courses %}
+            <div class="course-card">
+                <div>
+                    <h3 class="course-title">
+                        <a href="{% url 'view_course_detail' course.id %}">{{ course.title }}</a>
+                    </h3>
+                    <p class="instructor-name">Instructor: {{ course.instructor.name }}</p>
+                    <p class="instructor-name">Price: ${{ course.price }}</p>
+                </div>
+
+                <div class="course-actions">
+                    <a href="{% url 'enroll' course.id %}" class="btn-action btn-edit">Enroll</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-msg">
+            {% if query %}
+                <p>No results found for "<strong>{{ query }}</strong>" ❗</p>
+            {% else %}
+                <p>No courses available at the moment 🙂</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <div class="user-footer">
+            <span>Welcome, <strong>{{ user.username }}</strong></span>
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" style="background: none; border: none; color: #ef4444; cursor: pointer; font-weight: bold;">
+                    Logout
+                </button>
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
